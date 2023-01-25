@@ -16,7 +16,7 @@ pip install .
 
 Then go to the "app" directory in the package's location, or run:
 ```
-cd $(pip3 show Codeforces_CLI | sed -n '8p' | cut -b 11-)/app
+cd $(pip show Codeforces_CLI | sed -n '8p' | cut -b 11-)/app
 ```
 
 Next, create a .env file like the following:
