@@ -8,32 +8,47 @@ from app import jprint
 """
     Contest list
 """
-def contest_list(response, page):
+def contest_list(response, page, gym):
+    def cf_contest(response, start, end):
+        past_contest = False
+        Table = [["Contest Id", "Name", "Start", "Length"]]
+        for i in range(start, end + 1):
+            if (response[i]['startTimeSeconds'] < helper.get_real_time() and past_contest == False):
+                Table.append(["Past Contests", "-----", "--", "--"])
+                past_contest = True
+            row = []
+            row.append(response[i]['id'])
+            row.append(response[i]['name'])
+            row.append(helper.get_date_time(response[i]['startTimeSeconds']))
+            row.append(helper.get_contest_time(response[i]['durationSeconds']))
+            Table.append(row)
+        return tabulate(Table, headers="firstrow", tablefmt="grid")
+    
+    def gym_contest(response, start, end):
+        Table = [["Contest Id", "Name", "Start", "Length", "Type"]]
+        for i in range(start, end + 1):
+            row = []
+            row.append(response[i]['id'])
+            row.append(response[i]['name'])
+            if 'startTimeSeconds' in response[i]:
+                row.append(helper.get_date_time(response[i]['startTimeSeconds']))
+            else:
+                row.append('--')
+            row.append(helper.get_contest_time(response[i]['durationSeconds']))
+            Table.append(row)
+        return tabulate(Table, headers="firstrow", tablefmt="grid")
+
     response = response['result']
-    jprint.jprint(response)
 
     start = max(0, 15 * (page - 1))
     end = min(len(response) - 1, 15 * page - 1)
     if start > end:
         return "Invalid page"
     
-    past_contest = False
-    Table = [["Contest Id", "Name", "Start", "Length"]]
-    for i in range(start, end + 1):
-        if (response[i]['startTimeSeconds'] < helper.get_real_time() and past_contest == False):
-            Table.append(["Past Contests", "-----", "--", "--"])
-            past_contest = True
-    
-        row = []
-        row.append(response[i]['id'])
-        row.append(response[i]['name'])
-        row.append(helper.get_date_time(response[i]['startTimeSeconds']))
-        row.append(helper.get_contest_time(response[i]['durationSeconds']))
-
-        Table.append(row)
-
-
-    return tabulate(Table, headers="firstrow", tablefmt="grid")
+    if gym:
+        return gym_contest(response, start, end)
+    else:
+        return cf_contest(response, start, end)
 
 
 """

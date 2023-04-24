@@ -4,7 +4,7 @@ import datetime
 from colorama import Fore
 
 # get time
-def get_real_time():
+def get_real_time() -> int:
     return int(time.time())
 
 # get random 6 digits for api_call
@@ -20,7 +20,7 @@ def get_date_time(secs):
     return datetime.datetime.fromtimestamp(secs)
 
 # get time in hourly format
-def get_contest_time(secs):
+def get_contest_time(secs) -> str:
     res: str = ""
     res += str(int(secs / 3600)) + ":"
     if int((secs % 3600) / 60) < 10:

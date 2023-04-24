@@ -1,4 +1,3 @@
-import time
 from tabulate import tabulate
 from colorama import Fore
 from app import helper
@@ -41,7 +40,7 @@ def get_user(response):
     if "organization" in response:
         Table.append([color + "##" + Fore.RESET + " From", response['organization']])
 
-    if abs(response['lastOnlineTimeSeconds'] - time.time()) > 1000:
+    if abs(response['lastOnlineTimeSeconds'] - helper.get_real_time()) > 1000:
         Table.append([color + "##" + Fore.RESET + " Status", Fore.WHITE + "Offline" + Fore.RESET])
     else:
         Table.append([color + "##" + Fore.RESET + " Status", Fore.GREEN + "Online" + Fore.RESET])

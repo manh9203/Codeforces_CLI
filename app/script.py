@@ -35,6 +35,11 @@ def standing(contest_id, page, friends, unofficial):
     method = "contest.standings"
     params = {"contestId": contest_id}
 
+    start = 20 * (page - 1) + 1
+    count = "20"
+    params["from"] = int(start)
+    params["count"] = count
+
     if friends:
         temp = api_call.API_call("user.friends", {})["result"]
         handles = ""
@@ -47,7 +52,7 @@ def standing(contest_id, page, friends, unofficial):
         params["showUnofficial"] = "true"
     
     response = api_call.API_call(method, params)    
-    click.echo(make_standing.get_standing(response, page))
+    click.echo(make_standing.get_standing(response))
 
 cli.add_command(standing)
 
@@ -58,9 +63,14 @@ cli.add_command(standing)
 """
 @click.command(help="Show list of contest")
 @click.argument('page', type=int, default=1)
-def contests(page):
-    response = api_call.API_call("contest.list", {})
-    click.echo(make_lists.contest_list(response, page))
+@click.option('--gym', '-g', is_flag=True, help='Show gym contests')
+def contests(page, gym):
+    method = "contest.list"
+    params = {}
+    if gym:
+        params["gym"] = "true"
+    response = api_call.API_call(method, params)
+    click.echo(make_lists.contest_list(response, page, gym))
 cli.add_command(contests)
 
 
