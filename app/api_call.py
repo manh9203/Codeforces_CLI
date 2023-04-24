@@ -1,8 +1,7 @@
 import os
-import time
-import random
 import requests
 import hashlib
+from app import helper
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -10,14 +9,10 @@ apiKey = os.getenv('CF_KEY')
 secret = os.getenv('CF_SECRET')
 handle = os.getenv('CF_HANDLE')
 
-rand = ""
-for i in range(0, 6):
-    ch = chr(random.randint(48, 57))
-    rand += ch
-
 def API_call(method, param):
     req = "https://codeforces.com/api/" + method + "?"
-    now = str(int(time.time()))
+    now = str(helper.get_real_time())
+    rand = helper.gen_rand()
 
     for key in param:
         req += key + "=" + str(param[key]) + "&"

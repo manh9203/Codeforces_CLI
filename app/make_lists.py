@@ -1,25 +1,39 @@
 from tabulate import tabulate
 from colorama import Back
 from colorama import Fore
-import datetime
+from app import helper
 from app.api_call import handle
+from app import jprint
 
 """
     Contest list
 """
 def contest_list(response, page):
     response = response['result']
+    jprint.jprint(response)
 
     start = max(0, 15 * (page - 1))
     end = min(len(response) - 1, 15 * page - 1)
     if start > end:
         return "Invalid page"
     
-    Table = [["Contest Id", "Name"]]
+    past_contest = False
+    Table = [["Contest Id", "Name", "Start", "Length"]]
     for i in range(start, end + 1):
-        Table.append([response[i]['id'], response[i]['name']])
+        if (response[i]['startTimeSeconds'] < helper.get_real_time() and past_contest == False):
+            Table.append(["Past Contests", "-----", "--", "--"])
+            past_contest = True
+    
+        row = []
+        row.append(response[i]['id'])
+        row.append(response[i]['name'])
+        row.append(helper.get_date_time(response[i]['startTimeSeconds']))
+        row.append(helper.get_contest_time(response[i]['durationSeconds']))
 
-    return tabulate(Table, headers="firstrow", tablefmt="outline")
+        Table.append(row)
+
+
+    return tabulate(Table, headers="firstrow", tablefmt="grid")
 
 
 """
@@ -33,7 +47,7 @@ def sub_list(response, num):
     Table = [["Time", "Problem", "Lang", "Verdict", "Time", "Memory"]]
     for i in range(0, min(len(response), num)):
         row = []
-        row.append(datetime.datetime.fromtimestamp(response[i]['creationTimeSeconds']))
+        row.append(helper.get_date_time(response[i]['creationTimeSeconds']))
         row.append(str(response[i]['problem']['contestId']) + response[i]['problem']['index'])
         row.append(response[i]['programmingLanguage'])
 

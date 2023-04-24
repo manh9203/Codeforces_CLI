@@ -1,25 +1,7 @@
 import time
 from tabulate import tabulate
 from colorama import Fore
-
-"""
-    Set color based on rating
-"""
-def get_color(num):
-    if num < 1200:
-        return Fore.WHITE
-    elif num < 1400:
-        return Fore.GREEN
-    elif num < 1600:
-        return Fore.CYAN
-    elif num < 1900:
-        return Fore.BLUE
-    elif num < 2100:
-        return Fore.MAGENTA
-    elif num < 2400:
-        return Fore.YELLOW
-    else:
-        return Fore.RED
+from app import helper
 
 """
     Return user's info
@@ -33,7 +15,7 @@ def get_user(response):
     if "rating" not in response:
         color = Fore.RESET
     else:
-        color = get_color(response['rating'])
+        color = helper.get_color(response['rating'])
 
     s1 = color + "##" + Fore.RESET + " User"
     s2 = ""
@@ -47,7 +29,7 @@ def get_user(response):
     if "rating" in response:
         Table.append([color + "##" + Fore.RESET + " Rating", color + str(response['rating']) + Fore.RESET])
         Table.append([color + "##" + Fore.RESET + " Rank", color + response['rank'] + Fore.RESET])
-        oldColor = get_color(response['maxRating'])
+        oldColor = helper.get_color(response['maxRating'])
         Table.append([color + "##" + Fore.RESET + " Max rating", oldColor + str(response['maxRating']) + Fore.RESET])
         Table.append([color + "##" + Fore.RESET + " Max rank", oldColor + response['maxRank'] + Fore.RESET])
     else:
