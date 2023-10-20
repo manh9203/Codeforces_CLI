@@ -31,6 +31,8 @@ Get your key and secret from (https://codeforces.com/settings/api), handle and p
 
 ## Usage 
 
+![ezgif com-video-to-gif (1)](https://github.com/manh9203/Codeforces_CLI/assets/68766217/8ea69eee-a573-4b98-9273-ee227d1aa98f)
+
 ```
 cf + [command]
 ```
